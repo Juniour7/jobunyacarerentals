@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.manifest
+*.spec
+
+# Django
+*.log
+*.pot
+*.pyc
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+static/
+.env
+
+# VS Code / PyCharm / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Virtual Environments
+venv/
+ENV/
+env/
+.venv/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Coverage / testing
+.coverage
+.tox/
+htmlcov/
+.pytest_cache/
+
+# Migrations (optional — keep if you want to version control migrations)
+# */migrations/
+# !*/migrations/__init__.py
