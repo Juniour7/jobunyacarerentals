@@ -39,6 +39,7 @@ class Vehicle(models.Model):
     status = models.CharField(max_length=100, choices=STATUS_CHOICES)
     features = models.CharField(max_length=200, blank=True)
     image = models.ImageField(upload_to='vehicles/')
+    created_at = models.DateTimeField()
 
 
 class Booking(models.Model):
