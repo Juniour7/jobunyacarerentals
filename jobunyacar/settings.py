@@ -31,7 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'rest-framework'
+    'rest_framework',
+    'rental_app',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
