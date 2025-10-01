@@ -27,11 +27,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = "rental_app.UserProfile"
+
 
 # Application definition
 
 INSTALLED_APPS = [
     'rest_framework',
+    'rest_framework.authtoken',
     'rental_app',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -122,3 +125,19 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# use token auth by default (you can override per-view)
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+# For password reset email in dev:
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # prints emails to console
+DEFAULT_FROM_EMAIL = 'webmaster@localhost'
+# FRONTEND_URL used to build the password-reset link that you send to users:
+FRONTEND_URL = 'http://localhost:3000'

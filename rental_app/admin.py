@@ -3,8 +3,8 @@ from .models import UserProfile, Booking, Vehicle
 
 # Register your models here.
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['full_name', 'phone_number', 'license_number', 'created_at']
-    search_fields = ['full_name', 'creates_at']
+    list_display = ['full_name', 'phone_number', 'license_number', 'roles', 'created_at']
+    search_fields = ['full_name', 'creates_at', 'roles']
 
 
 class BookingAdmin(admin.ModelAdmin):
