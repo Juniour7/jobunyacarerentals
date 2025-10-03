@@ -29,6 +29,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = user
         fields = [
             'full_name',
+            'email',
             'phone_number',
             'license_number',
             'roles',
@@ -47,6 +48,14 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"agree_terms": "You must agree to terms"})
         
         return attrs
+    
+    def validate_email(self, value):
+        """
+        Check of email is already in use before saving
+        """
+        if UserProfile.objects.filter(email__iexact=value).exists():
+            raise serializers.ValidationError("A user with this email already exists")
+        return value
     
     def create(self, validated_data):
         # Remove the second password and set the password correctly

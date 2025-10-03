@@ -74,7 +74,7 @@ def login_view(request):
     if email:
         user = User.objects.filter(email__iexact=email).first()
     if not user or not user.check_password(password):
-        return Response({"detail"})
+        return Response({"detail" : "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
     
     # create/get token
     token, _ = Token.objects.get_or_create(user=user)
@@ -205,7 +205,7 @@ def vehicle_list_create_view(request):
     
     # Handles POST request only admins
     elif request.method == 'POST':
-        if request.user.is_authenticated:
+        if not request.user.is_authenticated:
             return Response({'error' : 'You must be loggen in as admin to add vehicle'}, status=status.HTTP_401_UNAUTHORIZED)
         
         if request.user.roles != 'admin':
@@ -253,7 +253,7 @@ def vehicle_detail_view(request, pk):
         if not request.user.is_authenticated or request.user.roles != 'admin':
             return Response({'error' : 'Only admins can delete a vehicle'})
         
-        vehicle.delet()
+        vehicle.delete()
         return Response({'message' : 'Vehice deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
     
 
