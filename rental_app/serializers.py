@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password # for password validations
 
 # Models
-from .models import Booking, Vehicle, Admin
+from .models import Booking, Vehicle, Admin, UserProfile
 
 user = get_user_model()
 
@@ -51,7 +51,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         # Remove the second password and set the password correctly
         validated_data.pop('password2', None)
         raw_password = validated_data.pop('password')
-        user = user(**validated_data)
+        user = UserProfile(**validated_data)
         user.set_password(raw_password)
         user.save()
 
