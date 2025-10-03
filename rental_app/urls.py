@@ -10,6 +10,7 @@ urlpatterns = [
     path('user/change_password/', views.change_password_view, name='change_password'),
     path('user/password-reset/', views.password_reset_request_view, name='password_reset'),
     path('user/passw0rd-reset-confirm/', views.password_reset_confirm_view, name='password_reset_confirm'),
+    path('user/customer-list/', views.customer_list, name='cusomter-list'),
 
     # Vehicle Endpoints
     path('vehicle/', views.vehicle_list_create_view, name='vehicle-list'),

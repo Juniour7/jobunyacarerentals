@@ -18,13 +18,12 @@ from .serializers import (
     ChangePasswordSerializer, VehicleSerializer, BookingSerializer
 ) 
 
-from .models import Vehicle, Booking
+from .models import Vehicle, Booking, UserProfile
 
 User = get_user_model()
 
 
 # User registration, login, password reset views
-
 @api_view(['POST']) # this makes the view an API endpoint with the method POST AS ALLOWED
 @permission_classes([AllowAny]) # anyone can access this endpoint
 def register_view(request):
@@ -41,6 +40,22 @@ def register_view(request):
         data['token'] = token.key
         return Response(data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def customer_list(request):
+    """
+    GET: List all users in the admin dashboard
+    """
+    if request.user.roles != 'admin':
+        return Response({'error' : 'Only Admins can view users'}, status=status.HTTP_403_FORBIDDEN)
+    
+    users = UserProfile.objects.all().order_by('-created_at')
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 @api_view(['POST'])
