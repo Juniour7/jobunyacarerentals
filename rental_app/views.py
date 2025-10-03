@@ -172,6 +172,8 @@ def password_reset_confirm_view(request):
 
     return Response({'detail': 'Password has been reset successfully.'}, status=status.HTTP_200_OK)
 
+
+
 # Vehicle Listing, and creating views
 @api_view(['POST', 'GET'])
 @permission_classes([AllowAny])
@@ -243,7 +245,7 @@ def vehicle_detail_view(request, pk):
     
 # Booking placements views
 @api_view(['POST'])
-@api_view([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def create_booking_view(request):
     """
     POST: Logged in users can book a vehicle
@@ -258,12 +260,24 @@ def create_booking_view(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def my_bookings(request):
+    """
+    GET: List all booking made by customer in their dashboard
+    """
+    bookings = Booking.objects.filter(user=request.user)
+    serializer = BookingSerializer(bookings, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def  all_booking_view(request):
     """
-    GET: List all booking in the admin dashboard
+    GET: List all booking of all customers in the admin dashboard
     """
     if request.user.roles != 'admin':
         return Response({'error': 'Only Admins can view all bookings'}, status=status.HTTP_403_FORBIDDEN)
@@ -271,6 +285,7 @@ def  all_booking_view(request):
     bookings = Booking.objects.all().order_by('-created_at')
     serializer = BookingSerializer(bookings, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])

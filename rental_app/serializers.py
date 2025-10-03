@@ -108,7 +108,7 @@ class VehicleSerializer(serializers.ModelSerializer):
 class BookingSerializer(serializers.ModelSerializer):
     vehicle_name = serializers.CharField(source='vehicle.name', read_only=True)
     vehicle_image = serializers.ImageField(source='vehicle.image', read_only=True)
-    daily_rate = serializers.DecimalField(source='vehicle.daily_rate', read_only=True, max_digits=10)
+    daily_rate = serializers.DecimalField(source='vehicle.daily_rate', read_only=True, max_digits=10, decimal_places=2)
 
     class Meta:
         model = Booking
