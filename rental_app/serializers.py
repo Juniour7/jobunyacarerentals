@@ -7,7 +7,7 @@ from .models import Booking, Vehicle, Admin, UserProfile
 
 user = get_user_model()
 
-# Serializers for my models
+# Serializers for User profile models
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = user
@@ -79,4 +79,42 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(write_only = True)
     new_password = serializers.CharField(write_only = True, validators = [validate_password])
-            
+
+
+# Serializers for vehicle model
+class VehicleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vehicle
+        fields = [
+            'id',
+            'name',
+            'model',
+            'car_type',
+            'description',
+            'seats',
+            'transmission',
+            'fuel_type',
+            'daily_rate',
+            'status',
+            'features',
+            'image',
+            'created_at'
+        ]
+        read_only_fields = ['id', 'created_at']
+
+
+# Serializer for the booking model
+class BookingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = [
+            'id',
+            'user',
+            'vehicle',
+            'start_date',
+            'end_date',
+            'total_price',
+            'status',
+            'created_at'
+        ]    
+        read_only_fields = ['id', 'created_at'] # fields we wouldnt wish the user to edit
