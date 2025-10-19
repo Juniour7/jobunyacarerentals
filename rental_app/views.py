@@ -23,22 +23,30 @@ from .models import Vehicle, Booking, UserProfile
 User = get_user_model()
 
 
-# User registration, login, password reset views
-@api_view(['POST']) # this makes the view an API endpoint with the method POST AS ALLOWED
-@permission_classes([AllowAny]) # anyone can access this endpoint
+# -----------ENDPOINT FOR REGISTRATIONS--------
+
+@api_view(['POST']) 
+@permission_classes([AllowAny]) 
 def register_view(request):
     """
-    POST: Register a new customer. Accepts fields required in registerserializer. 
-    Returns data and authtoken on success
+    POST: Register a new user (customer or admin).
+    Returns user data and auth token on success.
     """
     serializer = RegisterSerializer(data=request.data)
 
     if serializer.is_valid():
         user = serializer.save()
+        user.is_active = True  # Activate immediately
+        user.save()
+
+        # Create authentication token
         token, _ = Token.objects.get_or_create(user=user)
+
         data = UserSerializer(user).data
         data['token'] = token.key
+
         return Response(data, status=status.HTTP_201_CREATED)
+    
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -58,25 +66,26 @@ def customer_list(request):
 
 
 
+
+# -------- LOGIN --------
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
     """
-    POST: login with email and password
+    POST: Login with email and password
     """
     serializer = LoginSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     email = serializer.validated_data.get('email')
     password = serializer.validated_data['password']
 
-    # find user by email
-    user = None
-    if email:
-        user = User.objects.filter(email__iexact=email).first()
+    # Find user by email
+    user = User.objects.filter(email__iexact=email).first()
     if not user or not user.check_password(password):
-        return Response({"detail" : "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
-    
-    # create/get token
+        return Response({"detail": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Create/get token
     token, _ = Token.objects.get_or_create(user=user)
     data = UserSerializer(user).data
     data['token'] = token.key
@@ -93,7 +102,7 @@ def logout_view(request):
         request.user.auth_token.delete()
     except Exception:
         pass
-    return Response({"detail" : "Successfully logged out."}, status=status.HTTP_200_OK)
+    return Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
 
 
 
@@ -215,7 +224,7 @@ def vehicle_list_create_view(request):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.error, status=status.hHTTP)
+        return Response(serializer.errors, status=status.hHTTP)
 
     
 @api_view(['PUT', 'DELETE', 'GET'])
@@ -268,9 +277,9 @@ def create_booking_view(request):
     if request.user.roles != 'customer':
         return Response({'error' : 'Login to make a booking'}, status=status.HTTP_403_FORBIDDEN)
     
-    serializer = BookingSerializer(data=request.data)
+    serializer = BookingSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
-        serializer.save() # auto-link logged-in-customer
+        serializer.save(user=request.user) # auto-link logged-in-customer
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

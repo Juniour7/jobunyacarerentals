@@ -134,7 +134,7 @@ class BookingSerializer(serializers.ModelSerializer):
             'daily_rate',
             'created_at'
         ]    
-        read_only_fields = ['id', 'user', 'status', 'vehicle_name', 'vehicle_image', 'daily_rate', 'created_at'] # fields we wouldnt wish the user to edit
+        read_only_fields = ['id', 'user', 'status', 'vehicle_name', 'vehicle_image', 'daily_rate', 'created_at', 'total_price'] # fields we wouldnt wish the user to edit
 
     def create(self, validated_data):
         # Aurtomatically calculate total price
