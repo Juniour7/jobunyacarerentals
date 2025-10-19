@@ -29,3 +29,6 @@ class Vehicle(models.Model):
     features = models.CharField(max_length=200, blank=True)
     image = models.ImageField(upload_to='vehicles/')
     created_at = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.name}"

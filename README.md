@@ -3,19 +3,19 @@ This is a car rental application, It a software that will allow the owner, i.e t
 ### User Enpoints
 # Registratioin : api/user/register/ as Customer
 {
-    "full_name" : "Giftmacvane Momanyi",
-    "email" : "giftmomanyi@gmail.com",
+    "full_name" : "Lincon Momanyi",
+    "email" : "lincon@gmail.com",
     "phone_number" : "0716794363",
-    "license_number" : "DL2345",
-    "password" : "giftpassword",
-    "password2" : "giftpassword",
+    "license_number" : "DL254345",
+    "password" : "linconpassword",
+    "password2" : "linconpassword",
     "agree_terms" : "True"
 }
 
 # Login: api/user/login/
 {
-    "email" : "giftmomanyi@gmail.com",
-    "password" : "giftpassword"
+    "email" : "lincon@gmail.com",
+    "password" : "linconpassword"
 }
 
 - Login return an authorization token 
@@ -49,4 +49,48 @@ This returns a specific vehcile based upon what the customer selects and from he
 
 
 ## Booking Enpoints
+# Booking form /api/bookings/
+-This takes in the id of the specific vehicle the start and end date and automatically calculates the total price, it then return all the full details as in the example below
 
+when you send:
+
+<!-- Data from the form -->
+{
+    "vehicle": 1,
+    "start_date": "2025-10-25",
+    "end_date": "2025-10-27"
+}
+
+<!-- The expected output -->
+{
+    "id": 1,
+    "user": 1,
+    "vehicle": 1,
+    "vehicle_name": "Porsche 911 gt3 rs",
+    "vehicle_image": "/media/vehicles/867c7e51bc55db43a6764b70773078df_ASCpP9H.jpg",
+    "start_date": "2025-10-25",
+    "end_date": "2025-10-27",
+    "total_price": "1035.00",
+    "status": "pending",
+    "daily_rate": "345.00",
+    "created_at": "2025-10-19T17:27:44.578261Z"
+}
+
+
+# user bookings /api/my-bookings/
+The customer can also view all the booking they have made and check their status by hitting this endpoint, 
+
+
+{
+    "id": 1,
+    "user": 1,
+    "vehicle": 1,
+    "vehicle_name": "Porsche 911 gt3 rs",
+    "vehicle_image": "/media/vehicles/867c7e51bc55db43a6764b70773078df_ASCpP9H.jpg",
+    "start_date": "2025-10-25",
+    "end_date": "2025-10-27",
+    "total_price": "1035.00",
+    "status": "completed", # This would be the key change whether approved or denied by the admin
+    "daily_rate": "345.00",
+    "created_at": "2025-10-19T17:27:44.578261Z"
+}
