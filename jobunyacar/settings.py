@@ -35,6 +35,8 @@ AUTH_USER_MODEL = "rental_app.UserProfile"
 # Application definition
 
 INSTALLED_APPS = [
+    'vehicles',
+    'booking',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',

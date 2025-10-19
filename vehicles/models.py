@@ -1,0 +1,31 @@
+from django.db import models
+
+# Create your models here.
+class Vehicle(models.Model):
+    """
+    This is the Vehcile table to stores various vehicles in the database
+    """
+    TRANSMISSION_CHOICES = [
+        ('Automatic', 'Automatic'),
+        ('Manual', 'Manual'),
+    ]
+    FUEL_CHOICES = [
+        ('Diesel', 'Diesel'),
+        ('Petrol', 'Petrol'),
+    ]
+    STATUS_CHOICES = [
+        ('Available', 'Available'),
+        ('Booked', 'Booked'),
+    ]
+    name = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
+    car_type = models.CharField(max_length=200)
+    description = models.TextField()
+    seats = models.IntegerField()
+    transmission = models.CharField(max_length=20, choices=TRANSMISSION_CHOICES)
+    fuel_type = models.CharField(max_length=50, choices=FUEL_CHOICES)
+    daily_rate = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=100, choices=STATUS_CHOICES)
+    features = models.CharField(max_length=200, blank=True)
+    image = models.ImageField(upload_to='vehicles/')
+    created_at = models.DateTimeField()
