@@ -34,27 +34,27 @@ Registers a new  Customer
 
 Request Example:
 {
-  "full_name": "Felix Sirdes",
-  "email": "sirdes@gmail.com",
+  "full_name": "Edwin Boge",
+  "email": "boge@gmail.com",
   "phone_number": "0716794363",
-  "license_number": "DL2674345",
-  "password": "sirdesmypassword",
-  "password2": "sirdesmypassword",
-  "agree_terms": True
+  "license_number": "DL294345",
+  "password": "bogespassword",
+  "password2": "bogespassword",
+  "agree_terms": "True"
 }
 
 Login - /api/user/login/ (POST)
 Request Example:
 {
-  "email": "sirdes@gmail.com",
-  "password": "sirdesmypassword"
+  "email": "boge@gmail.com",
+  "password": "bogespassword"
 }
 
 Response Example:
 {
   "id": 1,
-  "email": "sirdes@gmail.com",
-  "full_name": "Felix Sirdes",
+  "email": "boge@gmail.com",
+  "full_name": "Edwin Boge",
   "roles": "customer",
   "token": "your-auth-token-here"
 }
