@@ -1,40 +1,45 @@
-from rest_framework import status
+from rest_framework import status, generics, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.authtoken.models import Token
+
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .serializers import VehicleSerializer
 from .models import Vehicle
+from .filters import VehicleFilter
 
 
-# Vehicle Listing, and creating views
-@api_view(['POST', 'GET'])
-@permission_classes([AllowAny])
-def vehicle_list_create_view(request):
+class VahicleListCreateView(generics.ListCreateAPIView):
     """
-    POST: Create vehicles from the dashboard (only admin)
-    GET: List vehicles in the front-end
+    GET: List all vehicles (public)
+    POST: Add new vehicle (admin only)
+    Supports filter, search, ordering, pagination.
     """
-    # handles GET request
-    if request.method == 'GET':
-        vehicles = Vehicle.objects.all() # fetch all vehicles from the DB
-        serializer = VehicleSerializer(vehicles, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    # Handles POST request only admins
-    elif request.method == 'POST':
-        if not request.user.is_authenticated:
+    queryset = Vehicle.objects.all().order_by('-created_at')
+    serializer_class = VehicleSerializer
+    permission_classes = [permissions.AllowAny]
+
+    # Filtering configuration
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_class = VehicleFilter
+    search_fields = ['name', 'model', 'description', 'features', 'car_type']
+    ordering_fields = ['daily_rate', 'seats', 'created_at']
+
+    def perform_create(self, serializer):
+        """
+        Only admins to create a vehicle
+        """
+        user = self.request.user
+        if not user.is_authenticated:
             return Response({'error' : 'You must be loggen in as admin to add vehicle'}, status=status.HTTP_401_UNAUTHORIZED)
         
-        if request.user.roles != 'admin':
+        if user.roles != 'admin':
             return Response({'error': 'Only admins can add a vehicle'})
         
-        serializer = VehicleSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.hHTTP)
+        serializer.save()
+
 
     
 @api_view(['PUT', 'DELETE', 'GET'])

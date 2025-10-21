@@ -61,13 +61,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         # Remove the second password and set the password correctly
         validated_data.pop('password2', None)
         raw_password = validated_data.pop('password')
+
+        # Role to customer for all API registrations
+        validated_data['roles'] = 'customer'
+
         user = UserProfile(**validated_data)
         user.set_password(raw_password)
         user.save()
-
-        # when user is registered as admin
-        if user.roles == 'admin':
-            Admin.objects.create(user=user)
         return user
     
 

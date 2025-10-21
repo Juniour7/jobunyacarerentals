@@ -28,7 +28,7 @@ class Vehicle(models.Model):
     status = models.CharField(max_length=100, choices=STATUS_CHOICES)
     features = models.CharField(max_length=200, blank=True)
     image = models.ImageField(upload_to='vehicles/')
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.name}"

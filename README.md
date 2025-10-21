@@ -3,19 +3,19 @@ This is a car rental application, It a software that will allow the owner, i.e t
 ### User Enpoints
 # Registratioin : api/user/register/ as Customer
 {
-    "full_name" : "Lincon Momanyi",
-    "email" : "lincon@gmail.com",
+    "full_name" : "Mrtha Momanyi",
+    "email" : "martha@gmail.com",
     "phone_number" : "0716794363",
-    "license_number" : "DL254345",
-    "password" : "linconpassword",
-    "password2" : "linconpassword",
+    "license_number" : "DL2674345",
+    "password" : "marthapassword",
+    "password2" : "marthapassword",
     "agree_terms" : "True"
 }
 
 # Login: api/user/login/
 {
-    "email" : "lincon@gmail.com",
-    "password" : "linconpassword"
+    "email" : "martha@gmail.com",
+    "password" : "marthapassword"
 }
 
 - Login return an authorization token 
