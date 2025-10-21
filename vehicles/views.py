@@ -11,7 +11,7 @@ from .models import Vehicle
 from .filters import VehicleFilter
 
 
-class VahicleListCreateView(generics.ListCreateAPIView):
+class VehicleListCreateView(generics.ListCreateAPIView):
     """
     GET: List all vehicles (public)
     POST: Add new vehicle (admin only)
