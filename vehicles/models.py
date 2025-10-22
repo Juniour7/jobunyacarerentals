@@ -30,8 +30,8 @@ class Vehicle(models.Model):
     image = models.ImageField(upload_to='vehicles/')
 
     min_days = models.IntegerField(blank=True, null=True)
-    engine = models.CharField(max_length=100)
-    engine_torque = models.CharField(max_length=200)
+    engine = models.CharField(max_length=100, blank=True, null=True)
+    engine_torque = models.CharField(max_length=200, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
