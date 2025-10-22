@@ -30,6 +30,9 @@ class VehicleSerializer(serializers.ModelSerializer):
             'features',
             'image',
             'images',
+            'min_days',
+            'engine',
+            'engine_torque',
             'created_at'
         ]
         read_only_fields = ['id', 'created_at']

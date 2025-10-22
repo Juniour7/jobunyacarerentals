@@ -39,6 +39,7 @@ class BookingSerializer(serializers.ModelSerializer):
         vehicle = validated_data['vehicle']
         start_date = validated_data['start_date']
         end_date = validated_data['end_date']
+        min_days = validated_data['min_days']
 
         # validation, end_date must not be before start_date
         if end_date < start_date:
@@ -46,6 +47,9 @@ class BookingSerializer(serializers.ModelSerializer):
         
         # Calculate number of days
         number_of_days = (end_date - start_date).days + 1
+
+        if number_of_days < min_days:
+            raise serializers.ValidationError("Number of days cant be less than minimum hire period")
 
         # compute total price
         total_price = vehicle.daily_rate * number_of_days

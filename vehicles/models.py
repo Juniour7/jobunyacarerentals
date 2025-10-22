@@ -28,6 +28,10 @@ class Vehicle(models.Model):
     status = models.CharField(max_length=100, choices=STATUS_CHOICES)
     features = models.CharField(max_length=200, blank=True)
     image = models.ImageField(upload_to='vehicles/')
+
+    min_days = models.IntegerField(blank=True, null=True)
+    engine = models.CharField(max_length=100)
+    engine_torque = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
