@@ -10,7 +10,9 @@ class VehicleImageInline(admin.TabularInline):
 
 @admin.register(Vehicle)
 class VehicleAdmin(admin.ModelAdmin):
-    list_display = ['name', 'model', 'car_type', 'seats', 'daily_rate', 'status', 'created_at']
+    list_display = ['name', 'model', 'car_type', 'seats', 'daily_rate', 'status', 'slug', 'created_at']
+    readonly_fields = ('slug',)
+    prepopulated_fields = {"slug": ("name",)}
     search_fields = ['name', 'model', 'car_type', 'created_at']
     inlines = [VehicleImageInline]
 
