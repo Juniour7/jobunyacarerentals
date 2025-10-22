@@ -44,14 +44,14 @@ class VehicleListCreateView(generics.ListCreateAPIView):
     
 @api_view(['PUT', 'DELETE', 'GET'])
 @permission_classes([AllowAny])
-def vehicle_detail_view(request, pk):
+def vehicle_detail_view(request, slug):
     """
     GET    → Retrieve a specific vehicle by ID (public to anyone)
     PUT    → Update a vehicle (admin)
     DELETE → Delete a vehicle (admin)
     """
     try:
-        vehicle = Vehicle.objects.get(pk=pk)
+        vehicle = Vehicle.objects.get(slug=slug)
     except Vehicle.DoesNotExist:
         return Response({'error' : 'Vehicle not found'}, status=status.HTTP_404_NOT_FOUND)
 

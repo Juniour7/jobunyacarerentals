@@ -28,6 +28,7 @@ class VehicleSerializer(serializers.ModelSerializer):
             'daily_rate',
             'status',
             'features',
+            'slug',
             'image',
             'images',
             'min_days',
@@ -35,4 +36,4 @@ class VehicleSerializer(serializers.ModelSerializer):
             'engine_torque',
             'created_at'
         ]
-        read_only_fields = ['id', 'created_at']
+        read_only_fields = ['id', 'slug', 'created_at']

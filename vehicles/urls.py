@@ -10,5 +10,5 @@ urlpatterns = [
     path('vehicles/', views.VehicleListCreateView.as_view(), name='vehicle-list-create'),
 
     # Public (GET) and Admin (PUT, DELETE)
-    path('vehicles/<int:pk>/', views.vehicle_detail_view, name='vehicle-detail'),
+    path('vehicles/<slug:slug>/', views.vehicle_detail_view, name='vehicle-detail'),
 ]
