@@ -2,11 +2,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.authtoken.models import Token
 
-from .serializers import BookingSerializer
-from .models import Booking
+from rest_framework import generics, permissions
 
+from .serializers import BookingSerializer, DamageReportSerializer
+from .models import Booking, DamageReport
+from .permissions import IsAdminRole
 
 # Create your views here.
 # Booking placements views
@@ -76,3 +77,37 @@ def update_booking_status_view(request, pk):
 
     serializer = BookingSerializer(booking)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# ---------Damge Report Enpoints-------
+
+class DamageReportView(generics.ListCreateAPIView):
+    """
+    Lists and creates damage reports for a particular user
+    """
+    serializer_class = DamageReportSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        """Only return reports for bookings owned by the logged in user"""
+        return DamageReport.objects.filter(booking__user=self.request.user)
+    
+    def perform_create(self,serializer):
+        """Save a new damage report"""
+        serializer.save()
+
+
+class AdminDamageReportView(generics.ListAPIView):
+    """Lists all damage reports from the users"""
+    queryset = DamageReport.objects.all().select_related('booking__vehicle', 'booking__user')
+    serializer_class = DamageReportSerializer
+    permission_classes = [IsAdminRole]
+
+
+class AdminDamageReportDetailView(generics.RetrieveUpdateAPIView):
+    """
+    Admin can view or update the status of a damage report.
+    """
+    queryset = DamageReport.objects.all().select_related('booking__vehicle', 'booking__user')
+    serializer_class = DamageReportSerializer
+    permission_classes = [IsAdminRole]

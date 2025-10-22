@@ -32,3 +32,16 @@ class Vehicle(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+    
+
+class VehicleImage(models.Model):
+    """
+    Additional Images for each vehicle
+    """
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='vehicles/')
+    uploaded_at = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Image for {self.vehicle.name}"
+

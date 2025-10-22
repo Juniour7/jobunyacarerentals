@@ -23,3 +23,17 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"Booking {self.user.email} for {self.vehicle.name}"
+
+
+class DamageReport(models.Model):
+    STATUS_CHOICES = [
+        ('unresolved', 'Unresolved'),
+        ('resolved', 'Resolved'),
+    ]
+    booking = models.OneToOneField(Booking, on_delete=models.CASCADE)
+    description = models.TextField()
+    status = models.CharField(max_length=25, choices=STATUS_CHOICES, default='unresolved')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Damage report for {self.booking.vehicle}"

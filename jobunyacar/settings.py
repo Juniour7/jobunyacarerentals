@@ -17,24 +17,29 @@ MEDIA_ROOT = BASE_DIR / 'media'
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # --- Security settings for production ---
-SECURE_HSTS_SECONDS = 31536000  # 1 year (recommended)
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# SECURE_HSTS_SECONDS = 31536000  
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
 
-SECURE_SSL_REDIRECT = True  # redirect all HTTP to HTTPS
+# SECURE_SSL_REDIRECT = True  
 
-SESSION_COOKIE_SECURE = True  # cookies only sent over HTTPS
-CSRF_COOKIE_SECURE = True     # CSRF cookie only sent over HTTPS
+# SESSION_COOKIE_SECURE = True  
+# CSRF_COOKIE_SECURE = True     
 
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = "DENY"
+# SECURE_BROWSER_XSS_FILTER = True
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# X_FRAME_OPTIONS = "DENY"
 
 
-ALLOWED_HOSTS = ['giftmacvane.pythonanywhere.com']
+ALLOWED_HOSTS = [
+    'giftmacvane.pythonanywhere.com',  # production
+    '127.0.0.1',                      # local dev
+    'localhost'                       # local dev
+]
+
 
 AUTH_USER_MODEL = "rental_app.UserProfile"
 

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Booking
+
+from .models import Booking, DamageReport
 from vehicles.models import Vehicle
 
 UserProfile = get_user_model()
@@ -59,3 +60,33 @@ class BookingSerializer(serializers.ModelSerializer):
             status='pending'
         )
         return booking 
+
+
+class DamageReportSerializer(serializers.ModelSerializer):
+    booking = serializers.PrimaryKeyRelatedField(queryset=Booking.objects.none())
+
+    class Meta:
+        model = DamageReport
+        fields = ['id', 'booking', 'description', 'status', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        request = self.context.get('request', None)
+        if request and request.user.is_authenticated:
+            # Limit bookings to the user's own for normal users
+            if getattr(request.user, 'role', None) == 'admin':
+                self.fields['booking'].queryset = Booking.objects.all()
+            else:
+                self.fields['booking'].queryset = Booking.objects.filter(user=request.user)
+
+            # Only admins can edit status
+            if getattr(request.user, 'role', None) != 'admin':
+                self.fields['status'].read_only = True
+        else:
+            self.fields['booking'].queryset = Booking.objects.none()
+
+    def validate_booking(self, booking):
+        if hasattr(booking, 'damagereport'):
+            raise serializers.ValidationError("A damage report already exists for this booking.")
+        return booking

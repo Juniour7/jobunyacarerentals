@@ -9,4 +9,9 @@ urlpatterns = [
     # Admin endpoints
     path('all-bookings/', views.all_booking_view, name='booking-all-list'),   # GET - admin: view all bookings
     path('bookings/<int:pk>/status/', views.update_booking_status_view, name='booking-status-update'),  # PUT - admin updates booking status
+
+    # Damage Report Endpoints
+    path('damage-reports/', views.DamageReportView.as_view(), name='damage-report-list-create'),
+    path('admin/damage-reports/', views.AdminDamageReportView.as_view(), name='admin-damage-reports'),
+    path('admin/damage-reports/<int:pk>/', views.AdminDamageReportDetailView.as_view, name='admin-damage-report-detail')
 ]

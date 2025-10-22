@@ -18,14 +18,5 @@ urlpatterns = [
     path('user/change-password/', views.change_password_view, name='user-change-password'),  # POST
 
     # Admin-only user management
-    path('user/customer-list/', views.customer_list, name='user-list'),  # GET - admin: list all users
-
-
-
-
-    # =====================
-    # 📘 BOOKING ENDPOINTS
-    # =====================
-
-    
+    path('user/customer-list/', views.customer_list, name='user-list'),  # GET - admin: list all user
 ]

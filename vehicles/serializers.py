@@ -1,9 +1,19 @@
 from rest_framework import serializers
-from .models import Vehicle
+
+from .models import Vehicle, VehicleImage
 
 
 # Serializers for vehicle model
+class VehicleImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VehicleImage
+        fields = ['id', 'image', 'uploaded_at']
+
+
+
 class VehicleSerializer(serializers.ModelSerializer):
+    images = VehicleImageSerializer(many=True, read_only=True)
+
     class Meta:
         model = Vehicle
         fields = [
@@ -19,6 +29,7 @@ class VehicleSerializer(serializers.ModelSerializer):
             'status',
             'features',
             'image',
+            'images',
             'created_at'
         ]
         read_only_fields = ['id', 'created_at']
