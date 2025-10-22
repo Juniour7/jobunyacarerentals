@@ -13,6 +13,7 @@ class VehicleImageSerializer(serializers.ModelSerializer):
 
 class VehicleSerializer(serializers.ModelSerializer):
     images = VehicleImageSerializer(many=True, read_only=True)
+    slug = serializers.CharField(read_only=True)
 
     class Meta:
         model = Vehicle
