@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 
 # Create your models here.
 class Vehicle(models.Model):
@@ -28,11 +29,24 @@ class Vehicle(models.Model):
     status = models.CharField(max_length=100, choices=STATUS_CHOICES)
     features = models.CharField(max_length=200, blank=True)
     image = models.ImageField(upload_to='vehicles/')
-
+    slug = models.SlugField(max_length=120, unique=True, blank=True)
     min_days = models.IntegerField(blank=True, null=True)
     engine = models.CharField(max_length=100, blank=True, null=True)
     engine_torque = models.CharField(max_length=200, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # Generate slug from name if it doesn't exist
+        if not self.slug:
+            base_slug = slugify(self.name)
+            slug = base_slug
+            counter = 1
+            # Ensure uniqueness
+            while Vehicle.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.name}"
