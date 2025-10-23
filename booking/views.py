@@ -108,6 +108,23 @@ class AdminDamageReportDetailView(generics.RetrieveUpdateAPIView):
     """
     Admin can view or update the status of a damage report.
     """
-    queryset = DamageReport.objects.all().select_related('booking__vehicle', 'booking__user')
+    queryset = DamageReport.objects.all().select_related('booking', 'booking__vehicle', 'booking__user')
     serializer_class = DamageReportSerializer
     permission_classes = [IsAdminRole]
+
+    def get_serializer(self, *args, **kwargs):
+        """
+        Override serializer for PATCH (update) requests to only allow updating `status`.
+        """
+        serializer_class = self.get_serializer_class()
+        if self.request.method in ['PATCH', 'PUT']:
+            # Only make 'status' writable
+            kwargs['partial'] = True
+            serializer = serializer_class(*args, **kwargs)
+            serializer.fields['booking'].read_only = True
+            serializer.fields['description'].read_only = True
+            serializer.fields['images'].read_only = True
+            serializer.fields['user_details'] = serializer.fields.get('user_details', None)
+        else:
+            serializer = serializer_class(*args, **kwargs)
+        return serializer
