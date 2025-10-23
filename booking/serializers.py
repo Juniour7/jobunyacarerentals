@@ -4,11 +4,14 @@ from django.contrib.auth import get_user_model
 from .models import Booking, DamageReport
 from vehicles.models import Vehicle
 
+from rental_app.serializers import UserSerializer
+
 UserProfile = get_user_model()
 
 
 # Serializer for the booking model
 class BookingSerializer(serializers.ModelSerializer):
+    user_info = UserSerializer(source='user', read_only=True)
     vehicle_name = serializers.CharField(source='vehicle.name', read_only=True)
     vehicle_image = serializers.ImageField(source='vehicle.image', read_only=True)
     daily_rate = serializers.DecimalField(source='vehicle.daily_rate', read_only=True, max_digits=10, decimal_places=2)
@@ -18,6 +21,7 @@ class BookingSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'user',
+            'user_info',
             'vehicle',
             'vehicle_name',
             'vehicle_image',
@@ -28,7 +32,7 @@ class BookingSerializer(serializers.ModelSerializer):
             'daily_rate',
             'created_at'
         ]    
-        read_only_fields = ['id', 'user', 'status', 'vehicle_name', 'vehicle_image', 'daily_rate', 'created_at', 'total_price'] # fields we wouldnt wish the user to edit
+        read_only_fields = ['id', 'user','user_info', 'status', 'vehicle_name', 'vehicle_image', 'daily_rate', 'created_at', 'total_price'] # fields we wouldnt wish the user to edit
 
     def create(self, validated_data):
         # Aurtomatically calculate total price
