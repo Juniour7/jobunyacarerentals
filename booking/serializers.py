@@ -77,24 +77,30 @@ class DamageReportSerializer(serializers.ModelSerializer):
     user_details = UserSerializer(source='booking.user', read_only=True)
     vehicle_details = serializers.SerializerMethodField()
 
-
     class Meta:
         model = DamageReport
         fields = ['id', 'booking', 'booking_details', 'user_details', 'vehicle_details', 'description', 'status', 'created_at']
         read_only_fields = ['id', 'created_at', 'booking_details', 'user_details', 'vehicle_details']
 
+    def get_vehicle_details(self, obj):
+        if not obj.booking or not obj.booking.vehicle:
+            return None
+        vehicle = obj.booking.vehicle
+        return {
+            "id": vehicle.id,
+            "name": vehicle.name,
+            "image": vehicle.image.url if vehicle.image else None,
+            "daily_rate": str(vehicle.daily_rate),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         request = self.context.get('request', None)
         if request and request.user.is_authenticated:
-            # Limit bookings to the user's own for normal users
             if getattr(request.user, 'roles', None) == 'admin':
                 self.fields['booking'].queryset = Booking.objects.all()
             else:
                 self.fields['booking'].queryset = Booking.objects.filter(user=request.user)
-
-            # Only admins can edit status
             if getattr(request.user, 'roles', None) != 'admin':
                 self.fields['status'].read_only = True
         else:
@@ -104,3 +110,4 @@ class DamageReportSerializer(serializers.ModelSerializer):
         if hasattr(booking, 'damagereport'):
             raise serializers.ValidationError("A damage report already exists for this booking.")
         return booking
+
