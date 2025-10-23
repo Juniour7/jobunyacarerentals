@@ -5,6 +5,7 @@ from .models import Booking, DamageReport
 from vehicles.models import Vehicle
 
 from rental_app.serializers import UserSerializer
+from vehicles.serializers import VehicleSerializer
 
 UserProfile = get_user_model()
 
@@ -72,24 +73,29 @@ class BookingSerializer(serializers.ModelSerializer):
 
 class DamageReportSerializer(serializers.ModelSerializer):
     booking = serializers.PrimaryKeyRelatedField(queryset=Booking.objects.none())
+    booking_details = BookingSerializer(source='booking', read_only=True)
+    user_details = UserSerializer(source='booking.user', read_only=True)
+    vehicle_details = serializers.SerializerMethodField()
+
 
     class Meta:
         model = DamageReport
-        fields = ['id', 'booking', 'description', 'status', 'created_at']
-        read_only_fields = ['id', 'created_at']
+        fields = ['id', 'booking', 'booking_details', 'user_details', 'vehicle_details', 'description', 'status', 'created_at']
+        read_only_fields = ['id', 'created_at', 'booking_details', 'user_details', 'vehicle_details']
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         request = self.context.get('request', None)
         if request and request.user.is_authenticated:
             # Limit bookings to the user's own for normal users
-            if getattr(request.user, 'role', None) == 'admin':
+            if getattr(request.user, 'roles', None) == 'admin':
                 self.fields['booking'].queryset = Booking.objects.all()
             else:
                 self.fields['booking'].queryset = Booking.objects.filter(user=request.user)
 
             # Only admins can edit status
-            if getattr(request.user, 'role', None) != 'admin':
+            if getattr(request.user, 'roles', None) != 'admin':
                 self.fields['status'].read_only = True
         else:
             self.fields['booking'].queryset = Booking.objects.none()
