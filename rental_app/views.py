@@ -99,10 +99,11 @@ def logout_view(request):
     POST: Logout by deleting the token for the current user
     """
     try:
-        request.user.auth_token.delete()
-    except Exception:
-        pass
-    return Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
+        token = Token.objects.get(user=request.user)
+        token.delete()
+        return Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
+    except Token.DoesNotExist:
+        return Response({"detail": "No active session found."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -132,9 +133,17 @@ def change_password_view(request):
     request.user.set_password(new_password)
     request.user.save()
 
-    Token.objects.filter(user=request.user).delete()
+    Token.objects.filter(user=request.user).delete() # delete old token
 
-    return Response({'detail' : 'Password changed successfully'})
+    # create new token
+    token = Token.objects.create(user=request.user)
+
+    data = {
+        "detail" : "Password changed successfully",
+        "toke" : token.key
+    }
+
+    return Response(data)
 
 
 @api_view(['POST'])
