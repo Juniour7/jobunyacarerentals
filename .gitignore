@@ -45,6 +45,7 @@ Thumbs.db
 htmlcov/
 .pytest_cache/
 
-# Migrations (optional — keep if you want to version control migrations)
-# */migrations/
-# !*/migrations/__init__.py
+Migrations (optional — keep if you want to version control migrations)
+migrations/
+*/migrations/
+!*/migrations/__init__.py

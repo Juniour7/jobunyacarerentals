@@ -1,6 +1,7 @@
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+import logging
 
 load_dotenv()
 
@@ -17,24 +18,32 @@ MEDIA_ROOT = BASE_DIR / 'media'
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+
 
 # --- Security settings for production ---
-SECURE_HSTS_SECONDS = 31536000  # 1 year (recommended)
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# DEBUG = False
+# SECURE_HSTS_SECONDS = 31536000  
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
 
-SECURE_SSL_REDIRECT = True  # redirect all HTTP to HTTPS
+# SECURE_SSL_REDIRECT = True  
 
-SESSION_COOKIE_SECURE = True  # cookies only sent over HTTPS
-CSRF_COOKIE_SECURE = True     # CSRF cookie only sent over HTTPS
+# SESSION_COOKIE_SECURE = True  
+# CSRF_COOKIE_SECURE = True     
 
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = "DENY"
+# SECURE_BROWSER_XSS_FILTER = True
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# X_FRAME_OPTIONS = "DENY"
 
 
-ALLOWED_HOSTS = ['giftmacvane.pythonanywhere.com']
+# Settings For Local Development
+DEBUG = True
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+
+
+ALLOWED_HOSTS = ['giftmacvane.pythonanywhere.com', '127.0.0.1', 'localhost']
 
 AUTH_USER_MODEL = "rental_app.UserProfile"
 
@@ -171,3 +180,33 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # prints email
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 # FRONTEND_URL used to build the password-reset link that you send to users:
 FRONTEND_URL = 'https://jobunyacarrentals.vercel.app/'
+
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.core.mail': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+
+# ----------------------------
+# EMAIL SETTINGS (PRODUCTION)
+# ----------------------------
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')  # your Gmail address
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')  # app password
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+FRONTEND_URL = 'https://jobunyacarrentals.vercel.app'  # your deployed frontend
