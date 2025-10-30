@@ -33,7 +33,7 @@ def send_password_reset_email(user, uid,token):
 
     subject = "Account Recovery"
     message = (
-        f"Hello {user.get_full_name() or user.username},\n\n"
+        f"Hello {user.full_name},\n\n"
         f"You requested to reset your password.\n\n"
         f"Click the link below to reset it:\n{reset_link}\n\n"
         f"If you didn’t request this, please ignore this email."

@@ -33,6 +33,8 @@ class VehicleSerializer(serializers.ModelSerializer):
             'images',
             'min_days',
             'engine',
+            'color',
+            'engine_power',
             'engine_torque',
             'created_at'
         ]

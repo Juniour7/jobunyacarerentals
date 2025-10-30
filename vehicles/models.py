@@ -53,8 +53,10 @@ class Vehicle(models.Model):
     features = models.CharField(max_length=200, blank=True)
     image = models.ImageField(upload_to='vehicles/')
     slug = models.SlugField(max_length=120, unique=True, blank=True)
+    color = models.CharField(max_length=150, null=True, blank=True)
     min_days = models.IntegerField(blank=True, null=True)
     engine = models.CharField(max_length=100, blank=True, null=True)
+    engine_power = models.CharField(max_length=100, blank=True, null=True)
     engine_torque = models.CharField(max_length=200, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
