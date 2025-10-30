@@ -10,7 +10,6 @@ class VehicleImageSerializer(serializers.ModelSerializer):
         fields = ['id', 'image', 'uploaded_at']
 
 
-
 class VehicleSerializer(serializers.ModelSerializer):
     images = VehicleImageSerializer(many=True, read_only=True)
     slug = serializers.CharField(read_only=True)

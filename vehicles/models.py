@@ -2,6 +2,10 @@ from django.db import models
 from django.utils.text import slugify
 
 # Create your models here.
+
+
+
+
 class Vehicle(models.Model):
     """
     This is the Vehcile table to stores various vehicles in the database
@@ -10,17 +14,36 @@ class Vehicle(models.Model):
         ('Automatic', 'Automatic'),
         ('Manual', 'Manual'),
     ]
+
     FUEL_CHOICES = [
         ('Diesel', 'Diesel'),
         ('Petrol', 'Petrol'),
+        ('Electric', 'Electric'),
+        ('Hybrid', 'Hybrid'),
     ]
+
     STATUS_CHOICES = [
         ('Available', 'Available'),
         ('Booked', 'Booked'),
     ]
+
+    # Added Car Type Choices
+    CAR_TYPE = [
+        ('Small Car', 'Small Car'),
+        ('Medium Car', 'Medium Car'),
+        ('Mid-Size Car', 'Mid-Size Car'),
+        ('SUV Car', 'SUV Car'),
+        ('Luxury Car', 'Luxury Car'),
+        ('Luxury SUV', 'Luxury SUV'),
+        ('Minivan', 'Minivan'),
+        ('Passenger Van', 'Passenger Van'),
+        ('Bus', 'Bus'),
+        ('Safari Vehicle', 'Safari Vehicle'),
+    ]
+
     name = models.CharField(max_length=100)
     model = models.CharField(max_length=100)
-    car_type = models.CharField(max_length=200)
+    car_type = models.CharField(max_length=150, choices=CAR_TYPE)
     description = models.TextField()
     seats = models.IntegerField()
     transmission = models.CharField(max_length=20, choices=TRANSMISSION_CHOICES)

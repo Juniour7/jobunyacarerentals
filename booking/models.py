@@ -5,6 +5,13 @@ from vehicles.models import Vehicle
 UserProfile = get_user_model()
 
 # Create your models here.
+class Location(models.Model):
+    name = models.CharField(max_length=150)
+    address = models.TextField()
+    city = models.CharField(max_length=100)
+
+
+
 class Booking(models.Model):
     """Booking Model to manage bookings"""
     STATUS_CHOICES = [
@@ -13,8 +20,11 @@ class Booking(models.Model):
         ("cancelled", "Cancelled"),
         ("completed", "Completed"),
     ]
+
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
+    pickup_location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, related_name='pickup_bookings')
+    dropoff_location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, related_name='dropoff_bookings')
     start_date = models.DateField()
     end_date = models.DateField()
     total_price = models.DecimalField(max_digits=10, decimal_places=2)

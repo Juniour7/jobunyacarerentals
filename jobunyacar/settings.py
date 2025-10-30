@@ -170,4 +170,4 @@ REST_FRAMEWORK = {
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # prints emails to console
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 # FRONTEND_URL used to build the password-reset link that you send to users:
-FRONTEND_URL = 'http://localhost:3000'
+FRONTEND_URL = 'https://jobunyacarrentals.vercel.app/'

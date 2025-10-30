@@ -50,10 +50,13 @@ class UserProfile(AbstractUser):
     full_name = models.CharField(max_length=200)
     phone_number = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
-    license_number = models.CharField(max_length=10, unique=True)
+    license_number = models.CharField(max_length=10, blank=True, null=True)
     roles = models.CharField(max_length=20, choices=ROLES, default='customer')
     agree_terms = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
+
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

@@ -16,7 +16,9 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'email', 'full_name', 'phone_number', 'license_number', 'roles', 'agree_terms', 'created_at' ]
         read_only_fields = ['id', 'created_at']
     
-
+class EmailVerificationSerializer(serializers.ModelSerializer):
+    uid = serializers.CharField()
+    token = serializers.CharField()
 
 class RegisterSerializer(serializers.ModelSerializer):
     """
