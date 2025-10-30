@@ -10,6 +10,13 @@ urlpatterns = [
     path('all-bookings/', views.all_booking_view, name='booking-all-list'),   # GET - admin: view all bookings
     path('bookings/<int:pk>/status/', views.update_booking_status_view, name='booking-status-update'),  # PUT - admin updates booking status
 
+
+    # Location Endpoints
+    path('locations/new/', views.location_create_view, name='location-create' ),
+    path('locations/', views.location_list_view, name='location-list'),
+    path('locations/<int:pk>/update/', views.update_location, name='location-update'),
+    path('locations/<int:pk>/delete/', views.location_delete_view, name='location-delete'),
+
     # Damage Report Endpoints
     path('damage-reports/', views.DamageReportView.as_view(), name='damage-report-list-create'),
     path('admin/damage-reports/', views.AdminDamageReportView.as_view(), name='admin-damage-reports'),

@@ -5,12 +5,104 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from rest_framework import generics, permissions
 
-from .serializers import BookingSerializer, DamageReportSerializer
-from .models import Booking, DamageReport
+from .serializers import BookingSerializer, DamageReportSerializer, LocationSerializer
+from .models import Booking, DamageReport, Location
 from .permissions import IsAdminRole
 
 # Create your views here.
-# Booking placements views
+
+# ----------------LOCATION EDNPOINTS---------
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def location_create_view(request):
+    """
+    Admin creates and save list of locations
+    """
+    if not request.user.roles == 'admin':
+        return Response(
+            {'error' : 'Only admins can add a location'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    if request.user.roles == 'admin':
+        serializer = LocationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                serializer.data, status=status.HTTP_200_OK
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def location_list_view(request):
+    """
+    Display List Of Location Options
+    """
+    location = Location.objects.all()
+    serializer = LocationSerializer(location, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+@api_view(['PUT', 'PATCH'])
+@permission_classes([IsAuthenticated])
+def update_location(request, pk):
+    """
+    Allow Admin to update the whole location or a section of it
+    """
+    if request.user.roles != 'admin':
+        return Response(
+            {'error': 'Only Admins can update the locations'},
+            status=status.HTTP_403_FORBIDDEN
+        )
+    
+    try:
+        location = Location.objects.get(pk=pk)
+    except Location.DoesNotExist:
+        return Response(
+            {'error' : 'Location not found'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    serializer = LocationSerializer(location, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(
+            serializer.data, status=status.HTTP_200_OK
+        )
+    return Response(
+        serializer.errors, status=status.HTTP_400_BAD_REQUEST
+    )
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def location_delete_view(request,pk):
+    """
+    Allow admins to delete a specific location
+    """
+    if request.user.roles != 'admin':
+        return Response(
+            {'error' : 'Only admins are allowed to delete a location record'},
+            status=status.HTTP_403_FORBIDDEN
+        )
+    
+    try:
+        location = Location.objects.get(pk=pk)
+    except Location.DoesNotExist:
+        return Response(
+            {'error' : 'Location not found'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    
+    location.delete()
+    return Response({'message': 'Location deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+# Booking placements 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_booking_view(request):

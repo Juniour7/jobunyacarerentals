@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
-from .models import Booking, DamageReport
+from .models import Booking, DamageReport, Location
 from vehicles.models import Vehicle
 
 from rental_app.serializers import UserSerializer
@@ -11,11 +11,35 @@ UserProfile = get_user_model()
 
 
 # Serializer for the booking model
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = [
+            'id',
+            'name',
+            'address',
+            'city',
+        ]
+        read_only_fields = ['id']
+
+
 class BookingSerializer(serializers.ModelSerializer):
     user_info = UserSerializer(source='user', read_only=True)
     vehicle_name = serializers.CharField(source='vehicle.name', read_only=True)
     vehicle_image = serializers.ImageField(source='vehicle.image', read_only=True)
     daily_rate = serializers.DecimalField(source='vehicle.daily_rate', read_only=True, max_digits=10, decimal_places=2)
+
+    pickup_location = serializers.PrimaryKeyRelatedField(
+        queryset=Location.objects.all()
+    ) 
+    dropoff_location = serializers.PrimaryKeyRelatedField(
+        queryset = Location.objects.all()
+    )
+
+    # For read-only nested details
+    pickup_location_detail = LocationSerializer(source='pickup_location', read_only=True)
+    dropoff_location_detail = LocationSerializer(source='dropoff_location', read_only=True)
 
     class Meta:
         model = Booking
@@ -23,7 +47,7 @@ class BookingSerializer(serializers.ModelSerializer):
             'id',
             'user',
             'pickup_location',
-            'dropoff_location'
+            'dropoff_location',
             'user_info',
             'vehicle',
             'vehicle_name',
@@ -44,6 +68,8 @@ class BookingSerializer(serializers.ModelSerializer):
         user = request.user if request else None
 
         vehicle = validated_data['vehicle']
+        pickup_location = validated_data['pickup_location']
+        dropoff_location = validated_data['dropoff_location']
         start_date = validated_data['start_date']
         end_date = validated_data['end_date']
         min_days = vehicle.min_days
@@ -58,13 +84,15 @@ class BookingSerializer(serializers.ModelSerializer):
         if number_of_days < min_days:
             raise serializers.ValidationError(f"Number of days cant be less than {min_days} period")
 
-        # compute total price
+        # compute total price   
         total_price = vehicle.daily_rate * number_of_days
 
         #create the booking
         booking = Booking.objects.create(
             user=user,
             vehicle=vehicle,
+            pickup_location=pickup_location,
+            dropoff_location=dropoff_location,
             start_date=start_date,
             end_date=end_date,
             total_price=total_price,

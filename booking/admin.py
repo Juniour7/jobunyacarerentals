@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Booking
+from .models import Booking, Location
 
 # Register your models here.
 class BookingAdmin(admin.ModelAdmin):
@@ -7,3 +7,4 @@ class BookingAdmin(admin.ModelAdmin):
     search_fields = ['user', 'vehicle', 'status', 'created_at']
 
 admin.site.register(Booking, BookingAdmin)
+admin.site.register(Location)
