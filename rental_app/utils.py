@@ -23,3 +23,26 @@ def send_activation_email(user,uid,token):
         [user.email],
         fail_silently=False,
     )
+
+
+def send_password_reset_email(user, uid,token):
+    """
+    Send a link for password reset
+    """
+    reset_link = f"{settings.FRONTEND_URL.rstrip('/')}/reset-password/{uid}/{token}"
+
+    subject = "Account Recovery"
+    message = (
+        f"Hello {user.get_full_name() or user.username},\n\n"
+        f"You requested to reset your password.\n\n"
+        f"Click the link below to reset it:\n{reset_link}\n\n"
+        f"If you didn’t request this, please ignore this email."
+    )
+
+    send_mail(
+        subject,
+        message,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[user.email],
+        fail_silently=False,
+    )

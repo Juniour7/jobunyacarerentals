@@ -17,7 +17,7 @@ from .serializers import (
     PasswordResetSerializer, PasswordResetConfirmSerializer,
     ChangePasswordSerializer, EmailVerificationSerializer
 ) 
-from .utils import send_activation_email
+from .utils import send_activation_email, send_password_reset_email
 from .models import  UserProfile
 
 
@@ -250,17 +250,21 @@ def password_reset_request_view(request):
         user = User.objects.get(email__iexact=email)
     except User.DoesNotExist:
         # do not reveal whether email exists
-        return Response({'detail': 'If an account with that email exists, we will send reset instructions.'}, status=status.HTTP_200_OK)
+        return Response(
+            {'detail': 'If an account with that email exists, we will send reset instructions.'},
+            status=status.HTTP_200_OK
+        )
 
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     token = default_token_generator.make_token(user)
-    # build a frontend link for user to use
-    reset_link = f"{settings.FRONTEND_URL.rstrip('/')}/reset-password/{uid}/{token}"
-    subject = "Password reset for your account"
-    message = f"Use this link to reset your password:\n\n{reset_link}\n\nIf you did not request a reset, ignore this message."
-    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
 
-    return Response({'detail': 'If an account with that email exists, we will send reset instructions.'}, status=status.HTTP_200_OK)
+    
+    send_password_reset_email(user, uid, token)
+
+    return Response(
+        {'detail': 'If an account with that email exists, we will send reset instructions.'},
+        status=status.HTTP_200_OK
+    )
 
 
 @api_view(['POST'])
