@@ -48,6 +48,8 @@ class BookingSerializer(serializers.ModelSerializer):
             'user',
             'pickup_location',
             'dropoff_location',
+            'pickup_location_detail',
+            'dropoff_location_detail',
             'user_info',
             'vehicle',
             'vehicle_name',
