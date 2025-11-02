@@ -119,6 +119,34 @@ def create_booking_view(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_booking_view(request, pk):
+    """
+    DELETE: Allow user to delete a booking slot
+    """
+    
+    try:
+        booking = Booking.objects.get(pk=pk)
+    except Booking.DoesNotExist:
+        return Response(
+            {'detail' : 'Booking could not be found'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    
+    if booking.user != request.user and not request.user.roles == 'admin':
+        return Response(
+            {'detail' : "You don't have permissions to delete this booking slot."},
+            status=status.HTTP_403_FORBIDDEN
+        )
+    
+    booking.delete()
+    return Response(
+        {'message' : 'Booking deleted successfully.'},
+        status=status.HTTP_204_NO_CONTENT
+    )
+
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

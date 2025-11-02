@@ -9,6 +9,7 @@ urlpatterns = [
     # Admin endpoints
     path('all-bookings/', views.all_booking_view, name='booking-all-list'),   # GET - admin: view all bookings
     path('bookings/<int:pk>/status/', views.update_booking_status_view, name='booking-status-update'),  # PUT - admin updates booking status
+    path('bookings/<int:pk>/delete/', views.delete_booking_view, name='delete-booking'),
 
 
     # Location Endpoints
