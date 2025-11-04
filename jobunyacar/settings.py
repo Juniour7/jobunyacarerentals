@@ -204,15 +204,7 @@ LOGGING = {
 # ----------------------------
 # settings.py
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_HOST = 'smtp-relay.brevo.com'  # from cPanel info
-EMAIL_PORT = 587  # SSL port (recommended)
-EMAIL_USE_TLS = True
-
-EMAIL_HOST_USER = '9ab954001@smtp-brevo.com'
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')  # store safely in environment
-
+BREVO_API_KEY = os.environ.get("BREVO_API_KEY")
 DEFAULT_FROM_EMAIL = 'no-reply@jobunyacarrentals.co.ke'
-
 FRONTEND_URL = 'https://jobunyacarrentals.co.ke/'  # your deployed frontend
