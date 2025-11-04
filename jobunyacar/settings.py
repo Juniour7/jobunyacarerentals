@@ -179,9 +179,9 @@ REST_FRAMEWORK = {
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # prints emails to console
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 # FRONTEND_URL used to build the password-reset link that you send to users:
+FRONTEND_URL = 'https://jobunyacarrentals.vercel.app/'
 
 
-ADMIN_EMAIL = 'giftmomanyi97@gmail.com'
 
 LOGGING = {
     'version': 1,
@@ -202,9 +202,11 @@ LOGGING = {
 # ----------------------------
 # EMAIL SETTINGS (PRODUCTION)
 # ----------------------------
-# settings.py
-
-
-BREVO_API_KEY = os.environ.get("BREVO_API_KEY")
-DEFAULT_FROM_EMAIL = 'no-reply@jobunyacarrentals.co.ke'
-FRONTEND_URL = 'https://jobunyacarrentals.co.ke/'  # your deployed frontend
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')  # your Gmail address
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')  # app password
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+FRONTEND_URL = 'https://jobunyacarrentals.co.ke'  # your deployed frontend
