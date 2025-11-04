@@ -21,26 +21,26 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 
 # --- Security settings for production ---
-DEBUG = False
-SECURE_HSTS_SECONDS = 31536000  
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# DEBUG = False
+# SECURE_HSTS_SECONDS = 31536000  
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
 
-SECURE_SSL_REDIRECT = True  
+# SECURE_SSL_REDIRECT = True  
 
-SESSION_COOKIE_SECURE = True  
-CSRF_COOKIE_SECURE = True     
+# SESSION_COOKIE_SECURE = True  
+# CSRF_COOKIE_SECURE = True     
 
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = "DENY"
+# SECURE_BROWSER_XSS_FILTER = True
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# X_FRAME_OPTIONS = "DENY"
 
 
 # Settings For Local Development
-# DEBUG = True
-# SECURE_SSL_REDIRECT = False
-# SESSION_COOKIE_SECURE = False
-# CSRF_COOKIE_SECURE = False
+DEBUG = True
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 
 
 ALLOWED_HOSTS = ['giftmacvane.pythonanywhere.com', '127.0.0.1', 'localhost']
@@ -206,14 +206,13 @@ LOGGING = {
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_HOST = 'mail.jobunyacarrentals.co.ke'  # from cPanel info
-EMAIL_PORT = 465  # SSL port (recommended)
-EMAIL_USE_SSL = True  # use SSL instead of TLS for port 465
-EMAIL_USE_TLS = False
+EMAIL_HOST = 'smtp-relay.brevo.com'  # from cPanel info
+EMAIL_PORT = 587  # SSL port (recommended)
+EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = 'no-reply@jobunyacarrentals.co.ke'
+EMAIL_HOST_USER = '9ab954001@smtp-brevo.com'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')  # store safely in environment
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = 'no-reply@jobunyacarrentals.co.ke'
 
 FRONTEND_URL = 'https://jobunyacarrentals.co.ke/'  # your deployed frontend
