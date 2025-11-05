@@ -9,9 +9,6 @@ urlpatterns = [
     # Public access (AllowAny)
     path('user/register/', views.register_view, name='user-register'),  # POST - register new user
 
-    # New Endpoints
-    path('user/verify-email/', views.verify_email, name='verify-email'),
-    path('user/resend-verification/', views.resend_verification_email_view, name='resend-verification'),
 
     path('user/login/', views.login_view, name='user-login'),          # POST - login
     path('user/password-reset/', views.password_reset_request_view, name='password-reset-request'),  # POST
