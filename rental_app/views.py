@@ -24,8 +24,7 @@ User = get_user_model()
 @permission_classes([AllowAny])
 def register_view(request):
     """
-    POST: Register a new user.
-    Immediately activates the user (no email verification required).
+    POST: Register a new user and return a valid token.
     """
     serializer = RegisterSerializer(data=request.data)
     if serializer.is_valid():
@@ -33,18 +32,20 @@ def register_view(request):
         user.is_active = True  # activate immediately
         user.save()
 
-        # Create authentication token right away
-        token, _ = Token.objects.get_or_create(user=user)
+        # Delete any old tokens just to be safe
+        Token.objects.filter(user=user).delete()
 
-        data = UserSerializer(user).data
-        data['token'] = token.key
+        # Create authentication token
+        token = Token.objects.create(user=user)
 
         return Response({
             "detail": "User registered successfully.",
-            "user": data
+            "token": token.key,
+            "user": UserSerializer(user).data
         }, status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 # ---------- LOGIN ----------
